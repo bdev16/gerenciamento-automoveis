@@ -26,3 +26,4 @@ C:\dev\csharp\minimal-api\obj\Debug\net9.0\refint\minimal-api.dll
 C:\dev\csharp\minimal-api\obj\Debug\net9.0\minimal-api.pdb
 C:\dev\csharp\minimal-api\obj\Debug\net9.0\minimal-api.genruntimeconfig.cache
 C:\dev\csharp\minimal-api\obj\Debug\net9.0\ref\minimal-api.dll
+C:\dev\csharp\minimal-api\obj\Debug\net9.0\minimal-api.sourcelink.json
