@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\dev\\csharp\\minimal-api\\minimal-api.csproj": {}
+    "C:\\dev\\csharp\\minimal-api\\minimal-api.csproj": {}
   },
   "projects": {
-    "c:\\dev\\csharp\\minimal-api\\minimal-api.csproj": {
+    "C:\\dev\\csharp\\minimal-api\\minimal-api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\dev\\csharp\\minimal-api\\minimal-api.csproj",
+        "projectUniqueName": "C:\\dev\\csharp\\minimal-api\\minimal-api.csproj",
         "projectName": "minimal-api",
-        "projectPath": "c:\\dev\\csharp\\minimal-api\\minimal-api.csproj",
+        "projectPath": "C:\\dev\\csharp\\minimal-api\\minimal-api.csproj",
         "packagesPath": "C:\\Users\\Bruno\\.nuget\\packages\\",
-        "outputPath": "c:\\dev\\csharp\\minimal-api\\obj\\",
+        "outputPath": "C:\\dev\\csharp\\minimal-api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,6 +50,28 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
