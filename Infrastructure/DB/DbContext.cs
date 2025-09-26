@@ -6,6 +6,11 @@ namespace MinimalApi.Infrastructure.Db;
 
 public class DbContext : DbContext
 {
+    private readonly IConfiguration _configurationAppSettings;
+    public DbContext(IConfiguration configurationAppSettings)
+    {
+        _configurationAppSettings = configurationAppSettings;
+    }
     public DbSet<Administrator> Administrators { get; set; } = default!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
