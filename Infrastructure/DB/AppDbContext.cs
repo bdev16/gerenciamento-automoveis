@@ -4,10 +4,10 @@ using MinimalApi.Domain.Entities;
 
 namespace MinimalApi.Infrastructure.Db;
 
-public class DbContext : Microsoft.EntityFrameworkCore.DbContext
+public class AppDbContext : DbContext
 {
     private readonly IConfiguration _configurationAppSettings;
-    public DbContext(IConfiguration configurationAppSettings)
+    public AppDbContext(IConfiguration configurationAppSettings)
     {
         _configurationAppSettings = configurationAppSettings;
     }
