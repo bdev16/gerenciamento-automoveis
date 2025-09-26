@@ -15,6 +15,11 @@ public class DbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("string de conexão");
+        var stringConection = _configurationAppSettings.GetConnectionString("sqlserver")?.ToString();
+        if (!string.IsNullOrEmpty(stringConection))
+        {
+            optionsBuilder.UseNpgsql(stringConection);
+        }
+
     }
 }
