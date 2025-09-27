@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using MinimalApi.Dominio.Interfaces;
+using MinimalApi.Dominio.Services;
 using MinimalApi.DTOs;
 using MinimalApi.Infrastructure.Db;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IAdministratorService, AdministratorService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
