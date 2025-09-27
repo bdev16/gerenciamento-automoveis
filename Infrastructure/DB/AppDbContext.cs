@@ -20,7 +20,7 @@ public class AppDbContext : DbContext
             var stringConection = _configurationAppSettings.GetConnectionString("sqlserver")?.ToString();
             if (!string.IsNullOrEmpty(stringConection))
             {
-                optionsBuilder.UseNpgsql(stringConection);
+                optionsBuilder.UseSqlServer(stringConection);
             }
         }
     }
