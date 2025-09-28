@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client.Extensibility;
+using MinimalApi.Domain.Entities;
 using MinimalApi.Domain.ModelViews;
 using MinimalApi.Dominio.Interfaces;
 using MinimalApi.Dominio.Services;
@@ -41,7 +42,18 @@ app.MapPost("/Administrators/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdmini
 # endregion
 
 # region Vehicles
+app.MapPost("/vehicles", (VehicleDTO vehicleDTO, IVehicleService vehicleService) =>
+{
+    var vehicle = new Vehicle
+    {
+        Nome = vehicleDTO.Nome,
+        Marca = vehicleDTO.Marca,
+        Ano = vehicleDTO.Ano
+    };
+    vehicleService.Include(vehicle);
 
+    return Results.Created($"/vehicle/{vehicle.Id}", vehicle);
+});
 # endregion
 
 # region App
