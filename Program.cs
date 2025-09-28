@@ -87,6 +87,16 @@ app.MapPut("/vehicles/{id}", (int id, VehicleDTO vehicleDTO, IVehicleService veh
 });
 # endregion
 
+app.MapDelete("/vehicles/{id}", (int id, IVehicleService vehicleService) =>
+{
+    var vechicle = vehicleService.SearchForId(id);
+    if (vechicle == null) return Results.NotFound();
+
+    vehicleService.Delete(vechicle);
+
+    return Results.NoContent();
+});
+
 # region App
 app.UseSwagger();
 app.UseSwaggerUI();
