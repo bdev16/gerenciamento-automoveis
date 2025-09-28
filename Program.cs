@@ -27,7 +27,7 @@ var app = builder.Build();
 # endregion
 
 # region Home
-app.MapGet("/", () => Results.Json(new Home()));
+app.MapGet("/", () => Results.Json(new Home())).WithTags("Home");
 # endregion
 
 # region Administrators
@@ -39,7 +39,7 @@ app.MapPost("/Administrators/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdmini
     }
     else
         return Results.Unauthorized();
-});
+}).WithTags("Administrators");
 # endregion
 
 # region Vehicles
@@ -61,7 +61,7 @@ app.MapGet("/vehicles", (int? page, IVehicleService vehicleService) =>
     var vehicles = vehicleService.All(page);
 
     return Results.Ok(vehicles);
-});
+}).WithTags("Vehicles");
 # endregion
 
 # region App
