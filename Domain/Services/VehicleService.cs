@@ -9,7 +9,7 @@ public class VehicleService : IVehicleService
     {
         _context = context;
     }
-    public List<Vehicle> All(int page, string? nome = null, string? marca = null)
+    public List<Vehicle> All(int? page, string? nome = null, string? marca = null)
     {
         var query = _context.Vehicles.AsQueryable();
         if (!string.IsNullOrEmpty(nome))
@@ -19,7 +19,8 @@ public class VehicleService : IVehicleService
 
         int itensForPage = 10;
 
-        query = query.Skip((page - 1) * itensForPage).Take(itensForPage);
+        if(page != null)
+            query = query.Skip(((int)page - 1) * itensForPage).Take(itensForPage);
 
         return query.ToList();
     }
