@@ -6,6 +6,7 @@ using MinimalApi.Dominio.Services;
 using MinimalApi.DTOs;
 using MinimalApi.Infrastructure.Db;
 
+# region Builder
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IAdministratorService, AdministratorService>();
@@ -21,9 +22,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 var app = builder.Build();
+# endregion
 
+# region Home
 app.MapGet("/", () => Results.Json(new Home()));
+# endregion
 
+# region Administrators
 app.MapPost("/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdministratorService administratorService) =>
 {
     if (administratorService.Login(loginDTO) != null)
@@ -33,8 +38,15 @@ app.MapPost("/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdministratorService 
     else
         return Results.Unauthorized();
 });
+# endregion
 
+# region Vehicles
+
+# endregion
+
+# region App
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.Run();
+# endregion
