@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client.Extensibility;
+using MinimalApi.Domain.ModelViews;
 using MinimalApi.Dominio.Interfaces;
 using MinimalApi.Dominio.Services;
 using MinimalApi.DTOs;
@@ -20,7 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => Results.Json(new Home()));
 
 app.MapPost("/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdministratorService administratorService) =>
 {
