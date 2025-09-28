@@ -71,6 +71,20 @@ app.MapGet("/vehicles/{id}", (int id, IVehicleService vehicleService) =>
 
     return Results.Ok(vehicle);
 }).WithTags("Vehicles");
+
+app.MapPut("/vehicles/{id}", (int id, VehicleDTO vehicleDTO, IVehicleService vehicleService) =>
+{
+    var vehicle = vehicleService.SearchForId(id);
+    if (vehicle == null) return Results.NotFound();
+
+    vehicle.Nome = vehicleDTO.Nome;
+    vehicle.Marca = vehicleDTO.Marca;
+    vehicle.Ano = vehicleDTO.Ano;
+
+    vehicleService.Update(vehicle);
+
+    return Results.Ok(vehicle);
+});
 # endregion
 
 # region App
