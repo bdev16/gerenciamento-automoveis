@@ -29,7 +29,7 @@ app.MapGet("/", () => Results.Json(new Home()));
 # endregion
 
 # region Administrators
-app.MapPost("/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdministratorService administratorService) =>
+app.MapPost("/Administrators/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdministratorService administratorService) =>
 {
     if (administratorService.Login(loginDTO) != null)
     {
