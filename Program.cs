@@ -54,7 +54,7 @@ app.MapPost("/vehicles", (VehicleDTO vehicleDTO, IVehicleService vehicleService)
     vehicleService.Include(vehicle);
 
     return Results.Created($"/vehicle/{vehicle.Id}", vehicle);
-});
+}).WithTags("Vehicles");
 
 app.MapGet("/vehicles", (int? page, IVehicleService vehicleService) =>
 {
@@ -84,8 +84,7 @@ app.MapPut("/vehicles/{id}", (int id, VehicleDTO vehicleDTO, IVehicleService veh
     vehicleService.Update(vehicle);
 
     return Results.Ok(vehicle);
-});
-# endregion
+}).WithTags("Vehicles");
 
 app.MapDelete("/vehicles/{id}", (int id, IVehicleService vehicleService) =>
 {
@@ -95,7 +94,8 @@ app.MapDelete("/vehicles/{id}", (int id, IVehicleService vehicleService) =>
     vehicleService.Delete(vechicle);
 
     return Results.NoContent();
-});
+}).WithTags("Vehicles");
+# endregion
 
 # region App
 app.UseSwagger();
