@@ -19,8 +19,8 @@ var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
 
-app.MapPost("/login", (MinimalApi.DTOs.LoginDTO loginDTO) => {
-    if (loginDTO.Email == "adm@teste.com" && loginDTO.Senha == "123456") {
+app.MapPost("/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdministratorService administratorService) => {
+    if (administratorService.Login(loginDTO) != null) {
         return Results.Ok("Login com sucesso!");
     }
     else
