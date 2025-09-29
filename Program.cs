@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client.Extensibility;
 using MinimalApi.Domain.Entities;
@@ -43,8 +44,32 @@ app.MapPost("/Administrators/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdmini
 # endregion
 
 # region Vehicles
+ValidationErros validateDTO(VehicleDTO vehicleDTO)
+{
+    var validation = new ValidationErros
+    {
+        Mensages = new List<string>()
+    };
+
+    if (string.IsNullOrEmpty(vehicleDTO.Nome))
+        validation.Mensages.Add("O nome não pode ser vazio.");
+
+    if (string.IsNullOrEmpty(vehicleDTO.Marca))
+        validation.Mensages.Add("A marca não pode ficar em branco");
+
+    if (vehicleDTO.Ano < 1950)
+        validation.Mensages.Add("Veiculo muito antigo, aceito somente anos superiores a 1950");
+
+    return validation;
+}
+
 app.MapPost("/vehicles", (VehicleDTO vehicleDTO, IVehicleService vehicleService) =>
 {
+    var validation = validateDTO(vehicleDTO);
+
+    if (validation.Mensages.Count > 0)
+        return Results.BadRequest(validation);
+
     var vehicle = new Vehicle
     {
         Nome = vehicleDTO.Nome,
@@ -76,6 +101,11 @@ app.MapPut("/vehicles/{id}", (int id, VehicleDTO vehicleDTO, IVehicleService veh
 {
     var vehicle = vehicleService.SearchForId(id);
     if (vehicle == null) return Results.NotFound();
+
+    var validation = validateDTO(vehicleDTO);
+
+    if (validation.Mensages.Count > 0)
+        return Results.BadRequest(validation);
 
     vehicle.Nome = vehicleDTO.Nome;
     vehicle.Marca = vehicleDTO.Marca;
