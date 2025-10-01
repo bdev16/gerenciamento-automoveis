@@ -1,4 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -56,11 +59,39 @@ app.MapGet("/", () => Results.Json(new Home())).WithTags("Home");
 # endregion
 
 # region Administrators
+string GenerateTokenJwt(Administrator administrator)
+{
+    if (string.IsNullOrEmpty(key)) return string.Empty;
+
+    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+    var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+    var claims = new List<Claim>()
+    {
+        new Claim("Email", administrator.Email),
+        new Claim("Profile", administrator.Perfil)
+    };
+
+    var token = new JwtSecurityToken(
+        claims: claims,
+        expires: DateTime.Now.AddDays(1),
+        signingCredentials: credentials
+    );
+
+    return new JwtSecurityTokenHandler().WriteToken(token);
+}
+
 app.MapPost("/Administrators/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdministratorService administratorService) =>
 {
-    if (administratorService.Login(loginDTO) != null)
+    var administrator = administratorService.Login(loginDTO);
+    if (administrator != null)
     {
-        return Results.Ok("Login com sucesso!");
+        string token = GenerateTokenJwt(administrator);
+        return Results.Ok(new AdministratorLoggad{
+            Email = administrator.Email,
+            Perfil = administrator.Perfil,
+            Token = token
+        });
     }
     else
         return Results.Unauthorized();
