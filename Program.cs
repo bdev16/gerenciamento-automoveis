@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client.Extensibility;
 using MinimalApi.Domain.Entities;
+using MinimalApi.Domain.Enums;
 using MinimalApi.Domain.ModelViews;
 using MinimalApi.Dominio.Interfaces;
 using MinimalApi.Dominio.Services;
@@ -41,6 +42,38 @@ app.MapPost("/Administrators/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdmini
     else
         return Results.Unauthorized();
 }).WithTags("Administrators");
+
+app.MapPost("/administrators", (AdministratorDTO administratorDTO, IAdministratorService administratorService) =>
+{
+    var validation = new ValidationErros
+    {
+        Mensages = new List<string>()
+    };
+
+    if (string.IsNullOrEmpty(administratorDTO.Email))
+        validation.Mensages.Add("Email não pode ser vazio");
+
+    if (string.IsNullOrEmpty(administratorDTO.Senha))
+        validation.Mensages.Add("Senha não pode ser vazia");
+
+    if (administratorDTO.Perfil == null)
+        validation.Mensages.Add("Perfil não pode ser vazio");
+
+    if (validation.Mensages.Count > 0)
+        return Results.BadRequest(validation);
+
+    var administrator = new Administrator
+    {
+        Email = administratorDTO.Email,
+        Senha = administratorDTO.Senha,
+        Perfil = administratorDTO.Perfil.ToString() ?? Profile.Editor.ToString()
+    };
+
+    administratorService.Include(administrator);
+
+    return Results.Created($"/administrador/{administrator.Id}", administrator);
+}).WithTags("Administrators");
+
 # endregion
 
 # region Vehicles
