@@ -43,6 +43,11 @@ app.MapPost("/Administrators/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdmini
         return Results.Unauthorized();
 }).WithTags("Administrators");
 
+app.MapGet("/administrators", (int? page, IAdministratorService administratorService) =>
+{
+    return Results.Ok(administratorService.All(page));
+}).WithTags("Administrators");
+
 app.MapPost("/administrators", (AdministratorDTO administratorDTO, IAdministratorService administratorService) =>
 {
     var validation = new ValidationErros
