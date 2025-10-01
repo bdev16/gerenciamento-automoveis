@@ -5,6 +5,7 @@ using MinimalApi.Domain.Entities;
 using MinimalApi.Domain.Enums;
 using MinimalApi.Domain.ModelViews;
 using MinimalApi.Dominio.Interfaces;
+using MinimalApi.Dominio.ModelViews;
 using MinimalApi.Dominio.Services;
 using MinimalApi.DTOs;
 using MinimalApi.Infrastructure.Db;
@@ -45,14 +46,30 @@ app.MapPost("/Administrators/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdmini
 
 app.MapGet("/administrators", (int? page, IAdministratorService administratorService) =>
 {
-    return Results.Ok(administratorService.All(page));
+    var administrators = new List<AdministratorModelView>();
+    var administratorsGet = administratorService.All(page);
+    foreach (var adm in administratorsGet)
+    {
+        administrators.Add(new AdministratorModelView
+        {
+            Id = adm.Id,
+            Email = adm.Email,
+            Profile = adm.Perfil
+        });
+    }
+    return Results.Ok(administrators);
 }).WithTags("Administrators");
 
 app.MapGet("/administrators/{id}", (int id, IAdministratorService administratorService) =>
 {
     var administrator = administratorService.SearchForId(id);
     if (administrator == null) return Results.NotFound();
-    return Results.Ok(administrator);
+    return Results.Ok(new AdministratorModelView
+    {
+        Id = administrator.Id,
+        Email = administrator.Email,
+        Profile = administrator.Perfil
+    });
 }).WithTags("Administrators");
 
 app.MapPost("/administrators", (AdministratorDTO administratorDTO, IAdministratorService administratorService) =>
@@ -83,7 +100,12 @@ app.MapPost("/administrators", (AdministratorDTO administratorDTO, IAdministrato
 
     administratorService.Include(administrator);
 
-    return Results.Created($"/administrador/{administrator.Id}", administrator);
+    return Results.Created($"/administrador/{administrator.Id}", new AdministratorModelView
+    {
+        Id = administrator.Id,
+        Email = administrator.Email,
+        Profile = administrator.Perfil
+    });
 }).WithTags("Administrators");
 
 # endregion
