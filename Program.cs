@@ -1,6 +1,9 @@
 using System.Net.Http.Headers;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client.Extensibility;
+using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Domain.Entities;
 using MinimalApi.Domain.Enums;
 using MinimalApi.Domain.ModelViews;
@@ -12,6 +15,25 @@ using MinimalApi.Infrastructure.Db;
 
 # region Builder
 var builder = WebApplication.CreateBuilder(args);
+
+var key = builder.Configuration.GetSection("Jwt").ToString();
+
+if (string.IsNullOrEmpty(key)) key = "123456";
+
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(option =>
+{
+    option.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateLifetime = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+    };
+});
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IAdministratorService, AdministratorService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
@@ -58,7 +80,7 @@ app.MapGet("/administrators", (int? page, IAdministratorService administratorSer
         });
     }
     return Results.Ok(administrators);
-}).WithTags("Administrators");
+}).RequireAuthorization().WithTags("Administrators");
 
 app.MapGet("/administrators/{id}", (int id, IAdministratorService administratorService) =>
 {
@@ -70,7 +92,7 @@ app.MapGet("/administrators/{id}", (int id, IAdministratorService administratorS
         Email = administrator.Email,
         Profile = administrator.Perfil
     });
-}).WithTags("Administrators");
+}).RequireAuthorization().WithTags("Administrators");
 
 app.MapPost("/administrators", (AdministratorDTO administratorDTO, IAdministratorService administratorService) =>
 {
@@ -106,7 +128,7 @@ app.MapPost("/administrators", (AdministratorDTO administratorDTO, IAdministrato
         Email = administrator.Email,
         Profile = administrator.Perfil
     });
-}).WithTags("Administrators");
+}).RequireAuthorization().WithTags("Administrators");
 
 # endregion
 
@@ -197,6 +219,9 @@ app.MapDelete("/vehicles/{id}", (int id, IVehicleService vehicleService) =>
 # region App
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
 # endregion
