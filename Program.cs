@@ -48,6 +48,13 @@ app.MapGet("/administrators", (int? page, IAdministratorService administratorSer
     return Results.Ok(administratorService.All(page));
 }).WithTags("Administrators");
 
+app.MapGet("/administrators/{id}", (int id, IAdministratorService administratorService) =>
+{
+    var administrator = administratorService.SearchForId(id);
+    if (administrator == null) return Results.NotFound();
+    return Results.Ok(administrator);
+}).WithTags("Administrators");
+
 app.MapPost("/administrators", (AdministratorDTO administratorDTO, IAdministratorService administratorService) =>
 {
     var validation = new ValidationErros
