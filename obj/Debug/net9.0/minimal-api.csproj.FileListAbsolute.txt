@@ -166,3 +166,4 @@ C:\dev\csharp\minimal-api\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\dev\csharp\minimal-api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\dev\csharp\minimal-api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\dev\csharp\minimal-api\obj\Debug\net9.0\minimal-api.MvcApplicationPartsAssemblyInfo.cs
+C:\dev\csharp\minimal-api\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
