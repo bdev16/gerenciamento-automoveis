@@ -33,7 +33,9 @@ builder.Services.AddAuthentication(option =>
     option.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateLifetime = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+        ValidateIssuer = false,
+        ValidateAudience = false
     };
 });
 
@@ -52,7 +54,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Insira o token JWT desta maneira: Bearer {Seu token}"
+        Description = "Insira o token JWT aqui:"
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -82,7 +84,7 @@ var app = builder.Build();
 # endregion
 
 # region Home
-app.MapGet("/", () => Results.Json(new Home())).WithTags("Home");
+app.MapGet("/", () => Results.Json(new Home())).AllowAnonymous().WithTags("Home");
 # endregion
 
 # region Administrators
@@ -122,7 +124,7 @@ app.MapPost("/Administrators/login", (MinimalApi.DTOs.LoginDTO loginDTO, IAdmini
     }
     else
         return Results.Unauthorized();
-}).WithTags("Administrators");
+}).AllowAnonymous().WithTags("Administrators");
 
 app.MapGet("/administrators", (int? page, IAdministratorService administratorService) =>
 {
