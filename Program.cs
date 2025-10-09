@@ -98,7 +98,8 @@ string GenerateTokenJwt(Administrator administrator)
     var claims = new List<Claim>()
     {
         new Claim("Email", administrator.Email),
-        new Claim("Profile", administrator.Perfil)
+        new Claim("Profile", administrator.Perfil),
+        new Claim(ClaimTypes.Role, administrator.Perfil)
     };
 
     var token = new JwtSecurityToken(
