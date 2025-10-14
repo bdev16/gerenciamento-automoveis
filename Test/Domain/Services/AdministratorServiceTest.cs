@@ -71,4 +71,25 @@ public class AdministratorServiceTest
         Assert.AreEqual(1, administratorResult?.Id);
     }
 
+    [TestMethod]
+    public void TestSearchAllAdministratorsToBd()
+    {
+        // Arrange
+        var context = CreateContextTest();
+        context.Database.ExecuteSqlRaw("TRUNCATE TABLE Administrators;");
+
+        var administrator = new Administrator();
+        administrator.Email = "administrators@teste.com";
+        administrator.Senha = "123456";
+        administrator.Perfil = "Adm";
+
+        var administratorService = new AdministratorService(context);
+
+        // Act
+        administratorService.Include(administrator);
+
+        // Assert
+        Assert.AreEqual(1, administratorService.All(1).Count());
+    }
+
 }
