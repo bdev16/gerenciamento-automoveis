@@ -24,7 +24,7 @@ public class AdministratorServiceTest
         var configuration = builder.Build();
 
         return new AppDbContext(configuration);
-    }  
+    }
 
     [TestMethod]
     public void TestSaveAdministratorToBd()
@@ -32,7 +32,7 @@ public class AdministratorServiceTest
 
         // Arrange
         var context = CreateContextTest();
-        context.Database.ExecuteSqlRaw("TRUNCATE TABLE Administrators");
+        context.Database.ExecuteSqlRaw("TRUNCATE TABLE Administrators;");
 
         var administrator = new Administrator();
         administrator.Email = "administrador@teste.com";
@@ -48,4 +48,27 @@ public class AdministratorServiceTest
         Assert.AreEqual(1, administratorService.All(1).Count());
 
     }
+
+    [TestMethod]
+    public void TestSearchAdministratorForIdToBd()
+    {
+        // Arrange
+        var context = CreateContextTest();
+        context.Database.ExecuteSqlRaw("TRUNCATE TABLE Administrators;");
+
+        var administrator = new Administrator();
+        administrator.Email = "administrator@teste.com";
+        administrator.Senha = "123456";
+        administrator.Perfil = "Adm";
+
+        var administratorService = new AdministratorService(context);
+
+        // Act
+        administratorService.Include(administrator);
+        var administratorResult = administratorService.SearchForId(administrator.Id);
+
+        // Assert
+        Assert.AreEqual(1, administratorResult?.Id);
+    }
+
 }
