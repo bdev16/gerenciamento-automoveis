@@ -1,5 +1,7 @@
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using MinimalApi.Domain.Entities;
 using MinimalApi.Infrastructure.Db;
 
 namespace Test.Domain.Services;
@@ -20,5 +22,26 @@ public class VehicleServiceTest
         var configuration = builder.Build();
 
         return new AppDbContext(configuration);
+    }
+
+    [TestMethod]
+    public void TestSaveVehicleToDb()
+    {
+        // Arrange
+        var context = CreateContextTest();
+        context.Database.ExecuteSqlRaw("TRUNCATE TABLE Vehicles;");
+
+        var vehicle = new Vehicle();
+        vehicle.Nome = "teste";
+        vehicle.Marca = "testeteste";
+        vehicle.Ano = 2000;
+
+        var vehicleService = new VehicleService(context);
+
+        // Act
+        vehicleService.Include(vehicle);
+
+        // Assert
+        Assert.AreEqual(1, vehicleService.All(1).Count());
     }
 }
