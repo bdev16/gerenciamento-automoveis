@@ -89,7 +89,7 @@ public class VehicleServiceTest
     }
 
     [TestMethod]
-    public void UpdateVehicleToBD()
+    public void DeleteVehicleToBD()
     {
         // Arrange
         var context = CreateContextTest();
