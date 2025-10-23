@@ -46,4 +46,14 @@ public class AdministratorServiceMock : IAdministratorService
     {
         return administrators.Find(administrator => administrator.Id == id);
     }
+
+    public Administrator DTOtoAdministrator(AdministratorDTO administratorDTO)
+    {
+        return new Administrator
+        {
+            Email = administratorDTO.Email,
+            Senha = administratorDTO.Senha,
+            Perfil = administratorDTO.Perfil.ToString() ?? ""
+        };
+    }
 }
