@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Core;
+using Microsoft.AspNetCore.SignalR;
 using MinimalApi.Domain.Enums;
 using MinimalApi.Domain.ModelViews;
 using MinimalApi.Dominio.ModelViews;
@@ -113,5 +114,40 @@ public class AdministratorRequestTest
         Assert.AreEqual(administratorDTO.Email, administratorModelView?.Email);
         Assert.AreEqual(administratorDTO.Perfil.ToString(), administratorModelView?.Profile);
 
+    }
+
+    [TestMethod]
+    public async Task TestGetEspecificAdminsitratorRequest()
+    {
+        // Arrange
+        var loginDTO = new LoginDTO
+        {
+            Email = "administrator@teste.com",
+            Senha = "123456"
+        };
+
+        var contentLogin = new StringContent(JsonSerializer.Serialize(loginDTO), Encoding.UTF8, "Application/json");
+
+        // Act
+        var responseLoginRequest = await Setup.client.PostAsync("/Administrators/login", contentLogin);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.OK, responseLoginRequest.StatusCode);
+
+        var resultResponseLoginRequest = await responseLoginRequest.Content.ReadAsStringAsync();
+        var administratorLogged = JsonSerializer.Deserialize<AdministratorLoggad>(resultResponseLoginRequest, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        Assert.IsNotNull(administratorLogged?.Email ?? "");
+        Assert.IsNotNull(administratorLogged?.Perfil ?? "");
+        Assert.IsNotNull(administratorLogged?.Token ?? "");
+
+        Setup.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", administratorLogged?.Token ?? "");
+
+        var responseGetAdministratorRequest = await Setup.client.GetAsync("/administrators/1");
+
+        Assert.AreEqual(HttpStatusCode.OK, responseGetAdministratorRequest.StatusCode); 
     }
 }
