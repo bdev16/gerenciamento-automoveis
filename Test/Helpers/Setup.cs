@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using MinimalApi.Dominio.Interfaces;
 using Test.Helpers;
+using Test.Mocks;
 
 namespace Test.Helper;
 
@@ -24,6 +25,7 @@ public class Setup
             builder.ConfigureServices(services =>
             {
                 services.AddScoped<IAdministratorService, AdministratorServiceMock>();
+                services.AddScoped<IVehicleService, VehicleServiceMock>();
             });
         });
 
