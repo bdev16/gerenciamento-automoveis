@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -148,6 +149,47 @@ public class AdministratorRequestTest
 
         var responseGetAdministratorRequest = await Setup.client.GetAsync("/administrators/1");
 
-        Assert.AreEqual(HttpStatusCode.OK, responseGetAdministratorRequest.StatusCode); 
+        Assert.AreEqual(HttpStatusCode.OK, responseGetAdministratorRequest.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task TestGetAllAdministratorRequest()
+    {
+        // Arrange
+        var loginDTO = new LoginDTO
+        {
+            Email = "administrator@teste.com",
+            Senha = "123456"
+        };
+
+        var contentLogin = new StringContent(JsonSerializer.Serialize(loginDTO), Encoding.UTF8, "Application/json");
+
+        // Act
+        var responseLoginRequest = await Setup.client.PostAsync("/Administrators/login", contentLogin);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.OK, responseLoginRequest.StatusCode);
+
+        var resultResponseLoginRequest = await responseLoginRequest.Content.ReadAsStringAsync();
+        var administratorLogged = JsonSerializer.Deserialize<AdministratorLoggad>(resultResponseLoginRequest, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        Assert.IsNotNull(administratorLogged?.Email ?? "");
+        Assert.IsNotNull(administratorLogged?.Perfil ?? "");
+        Assert.IsNotNull(administratorLogged?.Token ?? "");
+
+        Setup.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", administratorLogged?.Token);
+
+        var responseGetAllAdministratorsRequest = await Setup.client.GetAsync("/administrators");
+
+        var resultResponseGetAllAdministratorRequest = await responseGetAllAdministratorsRequest.Content.ReadAsStringAsync();
+        var administrators = JsonSerializer.Deserialize<List<AdministratorModelView>>(resultResponseGetAllAdministratorRequest, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        Assert.AreNotEqual(0, administrators?.Count);
     }
 }
