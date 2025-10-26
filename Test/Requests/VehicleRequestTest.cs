@@ -169,4 +169,58 @@ public class VehicleRequestTest
         Assert.AreNotEqual(0, vehicles?.Count);
     }
 
+    [TestMethod]
+    public async Task TestUpdateVehicleRequest()
+    {
+        // Arrange
+        var loginDTO = new LoginDTO
+        {
+            Email = "administrator@teste.com",
+            Senha = "123456"
+        };
+
+        var contentLogin = new StringContent(JsonSerializer.Serialize(loginDTO), Encoding.UTF8, "Application/json");
+
+        var vehicleDTO = new VehicleDTO
+        {
+            Nome = "testeModificado",
+            Marca = "testeIndusModificado",
+            Ano = 2002
+        };
+
+        var contentVehicle = new StringContent(JsonSerializer.Serialize(vehicleDTO), Encoding.UTF8, "Application/json");
+
+        // Act
+        var responseLoginRequest = await Setup.client.PostAsync("/Administrators/login", contentLogin);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.OK, responseLoginRequest.StatusCode);
+
+        var resultResponseLoginRequest = await responseLoginRequest.Content.ReadAsStringAsync();
+        var administratorLogged = JsonSerializer.Deserialize<AdministratorLoggad>(resultResponseLoginRequest, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        Assert.IsNotNull(administratorLogged?.Email ?? "");
+        Assert.IsNotNull(administratorLogged?.Perfil ?? "");
+        Assert.IsNotNull(administratorLogged?.Token ?? "");
+
+        Setup.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", administratorLogged?.Token);
+
+        var responseUpdateVehicleRequest = await Setup.client.PutAsync("/vehicles/1", contentVehicle);
+
+        Assert.AreEqual(HttpStatusCode.OK, responseUpdateVehicleRequest.StatusCode);
+
+        var resultResponseUpdateVehicleRequest = await responseUpdateVehicleRequest.Content.ReadAsStringAsync();
+        var vehicleUpdated = JsonSerializer.Deserialize<Vehicle>(resultResponseUpdateVehicleRequest, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        Assert.AreEqual("testeModificado", vehicleUpdated?.Nome);
+        Assert.AreEqual("testeIndusModificado", vehicleUpdated?.Marca);
+        Assert.AreEqual(2002, vehicleUpdated?.Ano);
+
+    }
 }
