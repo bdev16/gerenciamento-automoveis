@@ -8,6 +8,7 @@ public class VehicleServiceMock : IVehicleService
     {
         new Vehicle
         {
+            Id = 1,
             Nome = "teste",
             Marca = "testeIndus",
             Ano = 2000
@@ -35,9 +36,12 @@ public class VehicleServiceMock : IVehicleService
 
     public void Update(Vehicle vehicle)
     {
-        var vehicleBase = vehicles.Find(vehicleBase => vehicleBase.Id == vehicle.Id);
-        vehicleBase?.Nome = vehicle.Nome;
-        vehicleBase?.Marca = vehicle.Marca;
-        vehicleBase?.Ano = vehicle.Ano;
+        var vehicleBase = vehicles.Find(v => v.Id == vehicle.Id);
+        if (vehicleBase is null)
+            return;
+        
+        vehicleBase.Nome = vehicle.Nome;
+        vehicleBase.Marca = vehicle.Marca;
+        vehicleBase.Ano = vehicle.Ano;
     }
 }
