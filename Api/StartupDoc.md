@@ -1,4 +1,3 @@
-
 ## Construtor
 ```
     IConfiguration configuration
@@ -95,8 +94,24 @@ Método nativo da ASPNET.Core que tem o intuito de registrar todos os serviços 
 * Registra o contexto no container de injeção de dependencia da aplicação e faz as configurações voltadas ao uso do banco de dados, nesse caso o SqlServer. O codigo pega a string de conexão dentro do arquivo appsettings e utiliza tanto a classe AppDbContext e a string de conexão para entrar no banco de dados e fazer as operações definidas
   
 ### IApplicationBuilder; IWebHostEnvironment
-* O IApplicationBuilder é a interface que contém os métodos necessários para configurar o pipeline de requisições HTTP da aplicação. O Pipeline de requisições é onde as requisições ficam organizadas e estruturadas dentro da aplicação.
+* O **IApplicationBuilder** é a interface que define métodos que são necessários para configurar o pipeline de requisições HTTP da aplicação, definindo como os serviços que estão em execução vai continuar funcionando. O Pipeline de requisições é onde os middlewares, que são os componentes que recebem as requisições, ficam organizados e estruturadas dentro da aplicação, ele vai definir como as requisições vão ser tratadas, permissões, barreiras, etc....
+* O **IWebHostEnvironment** é a interface que define métodos voltados para a configuração e fornece as informações sobre o ambiente ao qual a aplicação está sendo executada.
 
-Ele vai definir como as requisições vão ser tratadas, permissões, barreiras, etc...
+### Midlewares
+* Nesse contexto, os middlewares são métodos responsáveis por processar as requisições que são feitas a aplicação, toda requisição feita passa pelos middlewares e eles vão fazer a captura das informações da requisição.
+<img width="1024" height="1536" alt="ChatGPT Image 31_10_2025, 18_53_00" src="https://github.com/user-attachments/assets/de0ea284-667a-4a4a-a2e0-74d1be020dbb" />
 
-* 
+```
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+```
+* O Swagger é o middleware responsável por verificar se a requisição está sendo feita pelo swagger ou não e por fazer a documentação no formato json da aplicação, essa documentação contém todos os endpoints criados e gera um novo endpoint que vai ser utilizado pelo SwaggerUI, além de conter registrado as possiveis respostas que podem ser feitas por cada endpoint.
+* O SwaggerUI é o middleware responsável por gerar uma ladding page interativa que vai representar a aplicação de maneira visual, contendo enpoints e alguns outros componentes que podem ser definidos.
+* O UseRouting é o middleware responsável por verificar e capturar as informações sobre qual o enpoint que está sendo solicitado, qual rota está sendo solicitada. Ele so faz o mapeamento, mas não faz o direcionamento.
+* O Use authentication é o middleware responsável por verificar se a requisição está sendo feita por um usuario logado ou não, esse middleware vai adquirir as informações sobre os usuarios, como o token de permissão, caso essas informações existam.
+* O UseAuthorization é o middleware responsável por verificar se o usuario que está fazendo a requisição tem ou não authorização para acessar aquele enpoint.
