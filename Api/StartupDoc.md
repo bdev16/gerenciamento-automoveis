@@ -115,3 +115,15 @@ app.UseAuthorization();
 * O UseRouting é o middleware responsável por verificar e capturar as informações sobre qual o enpoint que está sendo solicitado, qual rota está sendo solicitada. Ele so faz o mapeamento, mas não faz o direcionamento.
 * O Use authentication é o middleware responsável por verificar se a requisição está sendo feita por um usuario logado ou não, esse middleware vai adquirir as informações sobre os usuarios, como o token de permissão, caso essas informações existam.
 * O UseAuthorization é o middleware responsável por verificar se o usuario que está fazendo a requisição tem ou não authorização para acessar aquele enpoint.
+
+```
+app.UseEndpoints(endpoints =>
+{    
+```
+* O UseEndpoints é responsável por capturar a requisição e direcionar essa requisição o seu respectivo endpoint que esteja mapeado.
+
+```
+SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
+```
+*
