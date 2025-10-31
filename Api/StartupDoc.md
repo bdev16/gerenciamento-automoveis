@@ -94,3 +94,9 @@ Método nativo da ASPNET.Core que tem o intuito de registrar todos os serviços 
 ```
 * Registra o contexto no container de injeção de dependencia da aplicação e faz as configurações voltadas ao uso do banco de dados, nesse caso o SqlServer. O codigo pega a string de conexão dentro do arquivo appsettings e utiliza tanto a classe AppDbContext e a string de conexão para entrar no banco de dados e fazer as operações definidas
   
+### IApplicationBuilder; IWebHostEnvironment
+* O IApplicationBuilder é a interface que contém os métodos necessários para configurar o pipeline de requisições HTTP da aplicação. O Pipeline de requisições é onde as requisições ficam organizadas e estruturadas dentro da aplicação.
+
+Ele vai definir como as requisições vão ser tratadas, permissões, barreiras, etc...
+
+* 
