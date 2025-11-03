@@ -85,6 +85,18 @@ public class Startup
                 Configuration.GetConnectionString("sqlserver")
             );
         });
+
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                }
+            );
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -96,6 +108,8 @@ public class Startup
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UserCors();
 
         app.UseEndpoints(endpoints =>
         {
