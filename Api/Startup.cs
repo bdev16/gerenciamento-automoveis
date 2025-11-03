@@ -109,7 +109,7 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UserCors();
+        app.UseCors();
 
         app.UseEndpoints(endpoints =>
         {
